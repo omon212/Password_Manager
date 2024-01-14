@@ -3,7 +3,7 @@ from .models import User, Password
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import random
-from .serializer import UserRegisterSerializer, UserLoginSerializer, UserApplication
+from .serializer import UserRegisterSerializer, UserLoginSerializer, UserApplication, PasswordSerializer
 
 
 class PasswordGeneratelevel1(APIView):
@@ -92,9 +92,23 @@ class UserApplicationVIew(APIView):
 
     def post(self, request):
         serializer = UserApplication(data=request.data)
-
+        filter_email = User.objects.all()
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "User Password created successfully"}, status=200)
         else:
             return Response(serializer.errors, status=400)
+
+
+class Show_All_Userpasswrod(APIView):
+    serializer_class = PasswordSerializer
+    queryset = Password.objects.all()
+
+    def get(self,request):
+        user = Password.objects.all()
+        list_user = {}
+        for i in user:
+            print(i.user)
+            list_user[str(i.user)] = [i.name_of_applications,i.password,i.time]
+
+        return Response(list_user,status=200)

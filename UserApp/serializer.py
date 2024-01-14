@@ -18,3 +18,11 @@ class UserApplication(ModelSerializer):
     class Meta:
         model = Password
         fields = '__all__'
+
+
+
+class PasswordSerializer(ModelSerializer):
+    class Meta:
+        model = Password
+        fields = '__all__'
+
