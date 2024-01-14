@@ -3,7 +3,7 @@ from .models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import random
-from .serializer import UserRegisterSerializer
+from .serializer import UserRegisterSerializer, UserLoginSerializer
 
 
 class PasswordGeneratelevel1(APIView):
@@ -68,3 +68,19 @@ class UserRegisterView(APIView):
             return Response({"message": "User Created"})
         else:
             return Response(serializer_class.errors)
+
+
+class UserLoginView(APIView):
+    serializer = UserLoginSerializer
+    queryset = User.objects.all()
+    def post(self,request):
+        username = request.data.get("name")
+        password = request.data.get("password")
+        serializer = UserLoginSerializer(data=request.data)
+        user = User.objects.filter(name=username,password=password)
+        if user:
+            return Response({"message":"Login Success"},status=200)
+        else:
+            return Response(serializer.errors,status=400)
+
+
